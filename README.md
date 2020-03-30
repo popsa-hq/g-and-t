@@ -48,10 +48,10 @@ which labels have high certainty. You can then filter out the images which
 are dissimilar from your initial seed images.
 
 An example of how to download the labelled data is under:
-[notebooks/20200106 Analyse groundtruth results.ipynb]()
+[notebooks/20200106 Analyse groundtruth results.ipynb](notebooks/20200106 Analyse groundtruth results.ipynb)
 
 An example of filtering out irrelevant images using embeddings is here:
-[notebooks/20200221 Example data filtering.ipynb]()
+[notebooks/20200221 Example data filtering.ipynb](notebooks/20200221 Example data filtering.ipynb)
 
 ---
 Created by: Łukasz Kopeć.
