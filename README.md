@@ -51,7 +51,7 @@ An example of how to download the labelled data is under:
 [notebooks/20200106 Analyse groundtruth results.ipynb](notebooks/20200106 Analyse groundtruth results.ipynb)
 
 An example of filtering out irrelevant images using embeddings is here:
-[notebooks/20200221 Example data filtering.ipynb](notebooks/20200221 Example data filtering.ipynb)
+[notebooks/20200221 Example data filtering.ipynb](notebooks/20200221%20Example%20data%20filtering.ipynb)
 
 ---
 Created by: Łukasz Kopeć.
