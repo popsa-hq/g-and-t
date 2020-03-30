@@ -1,0 +1,210 @@
+<!--G & T - embeddinG&Training data, a package for crowdsourcing image labels
+
+Copyright (C) 2020 Popsa.
+Author: Łukasz Kopeć
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<link rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<style>
+    body {
+        padding: 20px;
+    }
+
+    crowd-button span {
+        width: 200px;
+        display: inline-flex;
+    }
+
+    crowd-button[form-action=submit] {
+        position: absolute;
+        padding-bottom: 40px;
+        padding-top: 20px;
+        right: 100px;
+    }
+
+    .centerBlock {
+        display: table;
+        margin: auto;
+    }
+
+    .img-container {
+        height: 20rem;
+        width: 20rem;
+        display: flex;
+        margin: 3px;
+    }
+
+    .card-size {
+        width: 20.5rem;
+        height: 25rem;
+        margin-top: 25px;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .img-max-size {
+        max-height: 20rem;
+        max-width: 20rem;
+        object-fit: contain;
+        margin: auto;
+    }
+</style>
+<script>
+    is_none_of_the_above = function (button) {
+        return (button.textContent.trim() === 'None of the above');
+    };
+
+    cancel_all_buttons = function (label_id) {
+        document.querySelectorAll('.card #button-group-' + label_id + ' crowd-button'
+        ).forEach(function (button) {
+            if (!is_none_of_the_above(button)) {
+                button.disabled = false;
+            }
+        });
+    };
+
+    cancel_none_of_the_above = function (label_id) {
+        document.querySelectorAll('.card #button-group-' + label_id + ' crowd-button'
+        ).forEach(function (button) {
+            if (is_none_of_the_above(button)) {
+                button.disabled = false;
+            }
+        });
+    };
+
+    get_parent_id_number = function (button) {
+        return button.parentElement.id.split('-')[2];
+    };
+
+    document.querySelectorAll('.card crowd-button').forEach(function (button) {
+        button.onmouseup = function () {
+            button.disabled = !button.disabled;
+            var parent_id = get_parent_id_number(button);
+            $('#question-' + parent_id).removeClass('bg-danger is-invalid');
+            if (is_none_of_the_above(button)) {
+                cancel_all_buttons(parent_id);
+            } else {
+                cancel_none_of_the_above(parent_id);
+            }
+        };
+    });
+
+    document.querySelector('crowd-form').onsubmit = function (event) {
+        var first_alert = true;
+        $('#error-alert').text(' ');
+        $('#error-alert').hide();
+        for (let i = 1; i <= "{{task.input.taskObject | size}}"; i++) {
+            var clickedButtons = Array.from(document.querySelectorAll(
+                '#button-group-' + i + ' crowd-button')).filter(function (button) {
+                return button.disabled;
+            });
+            $('#question-' + i).removeClass('bg-danger is-invalid');
+            if (!(Array.isArray(clickedButtons) && clickedButtons.length)) {
+                if (first_alert) {
+                    $('#error-alert').text('Question number ' + i + ' needs answer!');
+                    $('#error-alert').show();
+                    document.getElementById('error-alert').scrollIntoView();
+                    first_alert = false;
+                }
+                $('#question-' + i).addClass('bg-danger is-invalid');
+                event.preventDefault();
+            }
+            var joined_input = JSON.stringify(clickedButtons.map(function (button) {
+                return button.textContent.trim();
+            }));
+            var inputs = document.getElementsByClassName('input-for-question-' + i);
+            var j;
+            for (j = 0; j < inputs.length; j++) {
+              inputs[j].value = joined_input;
+            }
+        }
+
+    };
+</script>
+
+<crowd-form>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <p>
+                    Some of the pictures below come from one of specified
+                    events. Your task is to label the <b>ones which you think
+                    are typical of that event type</b>.
+                    If you're not sure, please select 'None of the above'.
+                </p>
+                <p>
+                    For example, pictures on the left show a typical 'Birthday',
+                    but pictures on the right do not.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="centerBlock">
+                    <img src="https://popsa-mturk.s3-eu-west-1.amazonaws.com/examples/birthday-yes-text-small.jpg"
+                         style="max-width:100%">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="centerBlock">
+                    <img src="https://popsa-mturk.s3-eu-west-1.amazonaws.com/examples/other-text-small.jpg"
+                         style="max-width:100%">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="error-alert" class="alert alert-danger" role="alert" style="display:none">
+    </div>
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            {% for image in task.input.taskObject %}
+            <div class="card text-center card-size"
+                 id="question-{{ forloop.index }}">
+                <div class="img-container">
+                    <img class="img-max-size"
+                         src="{{ image.source-ref | grant_read_access }}">
+                    <input class="input-for-question-{{ forloop.index }}"
+                           id="labels-{{ image.index }}"
+                           name="labels-{{ image.index }}" value="[]"
+                           type="hidden">
+                </div>
+                <div class="row no-gutters">
+                    <div class="col" id="button-group-{{ forloop.index }}">
+                        <crowd-button><span>Birthday Party</span></crowd-button>
+                        <br>
+                        <crowd-button><span>Bachelor/ ette Party</span></crowd-button>
+                        <br>
+                        <crowd-button><span>None of the above</span></crowd-button>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+</crowd-form>
