@@ -54,7 +54,7 @@ An example of filtering out irrelevant images using embeddings is here:
 [notebooks/20200221 Example data filtering.ipynb]()
 
 ---
-Created by: Łukasz Kopeć.
+Created by: [Łukasz Kopeć](https://twitter.com/thektokolwiek).
 
 Copyright (©) 2020 [Popsa](https://popsa.com).
 
