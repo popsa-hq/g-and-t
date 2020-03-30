@@ -33,10 +33,10 @@ crowdsourcing labelled data.
 There are a few parts to creating a labelling task:
 
 - Create a lambda function for pre-processing labelling task input and for
-post-processing answers - use source in [gandt/serving/]()
+post-processing answers - use source in [gandt/serving/](gandt/serving/)
 - Upload files to label to S3 and create a manifest file for use by Ground Truth
-based on them can be done by [gandt/data/prepare_data.py]()
-- Create interface for labelling - use examples in [gandt/templates/](). It will
+based on them can be done by [gandt/data/prepare_data.py](gandt/data/prepare_data.py)
+- Create interface for labelling - use examples in [gandt/templates/](gandt/templates/). It will
 look similar to this for the end user: 
 
 ![Example of labelling interface](docs/labelling-interface.png)
@@ -48,7 +48,7 @@ which labels have high certainty. You can then filter out the images which
 are dissimilar from your initial seed images.
 
 An example of how to download the labelled data is under:
-[notebooks/20200106 Analyse groundtruth results.ipynb](notebooks/20200106 Analyse groundtruth results.ipynb)
+[notebooks/20200106 Analyse groundtruth results.ipynb](notebooks/20200106%20Analyse%20groundtruth%20results.ipynb)
 
 An example of filtering out irrelevant images using embeddings is here:
 [notebooks/20200221 Example data filtering.ipynb](notebooks/20200221%20Example%20data%20filtering.ipynb)
